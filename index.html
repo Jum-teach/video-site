@@ -1,45 +1,253 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Watch Videos</title>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XMG Facebook Boost Hub</title>
+
   <style>
     body {
       margin: 0;
-      background: black;
+      font-family: Arial, sans-serif;
+      background: #f2f4f8;
+    }
+
+    header {
+      background: #1877f2;
       color: white;
-      font-family: Arial;
-    }
-    .video {
-      height: 100vh;
-    }
-    video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    .ad {
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      background: #111;
+      padding: 18px;
       text-align: center;
-      padding: 8px;
-      font-size: 14px;
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-around;
+      background: white;
+      padding: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+    }
+
+    nav button {
+      border: none;
+      background: none;
+      font-size: 15px;
+      font-weight: bold;
+      color: #1877f2;
+      cursor: pointer;
+    }
+
+    .page {
+      display: none;
+      padding: 15px;
+    }
+
+    .active {
+      display: block;
+    }
+
+    .card {
+      background: white;
+      padding: 15px;
+      border-radius: 15px;
+      margin-top: 15px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 10px;
+      background: #1877f2;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    input {
+      width: 95%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      margin-top: 10px;
+    }
+
+    .vip {
+      border: 2px solid gold;
+      background: #fff8dc;
+    }
+
+    a {
+      color: #1877f2;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .task {
+      border: 1px solid #ddd;
+      padding: 12px;
+      border-radius: 12px;
+      margin-top: 10px;
     }
   </style>
 </head>
+
 <body>
 
-<div class="video">
-  <video autoplay muted loop>
-    <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
-  </video>
+<header>🔥 XMG Facebook Boost Hub</header>
+
+<nav>
+  <button onclick="openPage('home')">Home</button>
+  <button onclick="openPage('earn')">Earn</button>
+  <button onclick="openPage('promote')">Promote</button>
+  <button onclick="openPage('profile')">Profile</button>
+</nav>
+
+<!-- HOME -->
+<div id="home" class="page active">
+  <div class="card">
+    <h2>Welcome Brother 😄</h2>
+    <p>This app helps Facebook users grow safely using real engagement.</p>
+  </div>
+
+  <div class="card vip">
+    <h3>⭐ VIP Owner Link</h3>
+    <p>Follow the Owner (Juma):</p>
+    <a href="https://www.facebook.com/share/15q7VdbwRv/" target="_blank">
+      👉 Click Here to Follow Owner
+    </a>
+    <button class="btn" onclick="vipFollow()">
+      ✅ I Followed Owner (+10 Coins)
+    </button>
+  </div>
 </div>
 
-<div class="ad">
-  Ads will appear here
+<!-- EARN -->
+<div id="earn" class="page">
+  <div class="card">
+    <h2>Earn Coins 💰</h2>
+    <p>Follow others to earn coins.</p>
+    <div id="taskList"></div>
+  </div>
 </div>
+
+<!-- PROMOTE -->
+<div id="promote" class="page">
+  <div class="card">
+    <h2>Promote Your Link 🚀</h2>
+    <p>Submit your Facebook profile/page link:</p>
+
+    <input id="linkInput" placeholder="Paste Facebook link here">
+    <button class="btn" onclick="addTask()">Submit Promotion</button>
+  </div>
+</div>
+
+<!-- PROFILE -->
+<div id="profile" class="page">
+  <div class="card">
+    <h2>Your Profile</h2>
+    <h3>Coins: <span id="coins">0</span> 💰</h3>
+
+    <button class="btn" onclick="resetAll()">Reset App Data</button>
+  </div>
+</div>
+
+<script>
+  let coins = 0;
+  let tasks = [];
+
+  function openPage(pageId) {
+    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+    document.getElementById(pageId).classList.add("active");
+  }
+
+  function saveData() {
+    localStorage.setItem("xmgCoins", coins);
+    localStorage.setItem("xmgTasks", JSON.stringify(tasks));
+  }
+
+  function loadData() {
+    let savedCoins = localStorage.getItem("xmgCoins");
+    let savedTasks = localStorage.getItem("xmgTasks");
+
+    if (savedCoins) coins = parseInt(savedCoins);
+    if (savedTasks) tasks = JSON.parse(savedTasks);
+
+    updateCoins();
+    showTasks();
+  }
+
+  function updateCoins() {
+    document.getElementById("coins").innerText = coins;
+    saveData();
+  }
+
+  function vipFollow() {
+    coins += 10;
+    updateCoins();
+    alert("🔥 Thanks! You earned 10 coins for following the owner!");
+  }
+
+  function addTask() {
+    let link = document.getElementById("linkInput").value;
+
+    if (link === "") {
+      alert("Please paste a Facebook link!");
+      return;
+    }
+
+    tasks.push(link);
+    document.getElementById("linkInput").value = "";
+    showTasks();
+    alert("✅ Your link is now promoted!");
+  }
+
+  function showTasks() {
+    let taskList = document.getElementById("taskList");
+    taskList.innerHTML = "";
+
+    if (tasks.length === 0) {
+      taskList.innerHTML = "<p>No tasks available yet.</p>";
+      return;
+    }
+
+    tasks.forEach((link, index) => {
+      taskList.innerHTML += `
+        <div class="task">
+          <p>Follow this user:</p>
+          <a href="${link}" target="_blank">${link}</a>
+          <button class="btn" onclick="completeTask(${index})">
+            ✅ I Followed (+5 Coins)
+          </button>
+        </div>
+      `;
+    });
+  }
+
+  function completeTask(index) {
+    coins += 5;
+    tasks.splice(index, 1);
+    updateCoins();
+    showTasks();
+    alert("🎉 Great! You earned 5 coins!");
+  }
+
+  function resetAll() {
+    localStorage.clear();
+    coins = 0;
+    tasks = [];
+    updateCoins();
+    showTasks();
+    alert("App reset successfully!");
+  }
+
+  loadData();
+</script>
 
 </body>
-  </html>
+</html>
